@@ -22,7 +22,7 @@ This project uses the following open source software:
 
 | Project | License | Notes |
 | :-- | :-- | :-- |
-| [Original EzSlideTimer](https://github.com/Winterreisender/EzSlideTimer) | GNU Affero GPL v3 | forked from this repo and translated to English|
+| [Original EzSlideTimer](https://github.com/Winterreisender/EzSlideTimer) | [GNU Affero GPL v3](https://github.com/poa00/EzSlideTimer?tab=readme-ov-file#) | forked from this repo and translated to English|
 | [Dear ImGui](https://github.com/ocornut/imgui)  | [MIT](https://mit-license.org/) | |
 | [glfw](https://www.glfw.org/) | [Zlib OR Libpng](https://www.glfw.org/license) | |
 | [辉光管图片 by Richard Štefún](https://www.pexels.com/photo/2024-alarm-clock-arduino-clock-1069690/) | [Pexels](https://www.pexels.com/license/)  | App Icon Used |
