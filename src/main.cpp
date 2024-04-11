@@ -30,7 +30,7 @@
 #include <chrono>
 using namespace std;
 
-constexpr auto AppName = "EzSlideTimer";
+constexpr auto AppName = "ShowTimer";
 
 int main(int, char **)
 {
@@ -40,8 +40,8 @@ int main(int, char **)
     const auto windowColorFull = ImVec4(.9f, .9f, .9f, 1.0f);
     constexpr int windowWidthCompact = 80;
     const auto windowColorCompact = ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
-    constexpr int fpsIntervalCompact = 12; // 1/12 垂直同步 60fps屏幕->5fps程序
-    constexpr int fpsIntervalFull = 1;     // 1 垂直同步
+    constexpr int fpsIntervalCompact = 12; // 1/12 vertical sync 60fp screen -> 5fps program
+    constexpr int fpsIntervalFull = 1;     // vertical sync
 
     glfwSetErrorCallback(
         [](int error, const char *description)
@@ -72,16 +72,16 @@ int main(int, char **)
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
-    // 设置Windows窗口为无边框,透明
+    // Windows OS: borderless, transparent interface
     glfwWindowHint(GLFW_DECORATED, false);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 
-    // 创建窗口
+    // Create window
     GLFWwindow *window = glfwCreateWindow(windowWidthFull, windowHeightFull, AppName, NULL, NULL);
     assert(window);
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(fpsIntervalCompact); // 1/12 垂直同步帧率 60fps->5fps
+    glfwSwapInterval(fpsIntervalCompact); // 1/12 vertical sync frame rate 60fps->5fps
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -93,20 +93,20 @@ int main(int, char **)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    // 设置默认字体
-    ImFont *font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\MSYH.ttc", 21.0f, NULL,
-                                                io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+    // Set default font
+    //ImFont *font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\MSYH.ttc", 21.0f, NULL,
+                                               // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     IM_ASSERT(font != NULL);
 
-    // 设置默认背景色
-    ImVec4 clear_color = windowColorCompact; // 全透明
+    // Set default background color
+    ImVec4 clear_color = windowColorCompact; // Fully transparent
 
-    // 计时器线程
-    chrono::steady_clock::time_point beginTime = chrono::steady_clock::now(); // UI写,计时器读
-    chrono::steady_clock::duration offset = chrono::nanoseconds(0ll);         // UI写,计时器读
-    long long timerCount = 0ul;                                               // 计时器写,UI读写
+    // Timer thread
+    chrono::steady_clock::time_point beginTime = chrono::steady_clock::now(); // UI write, timer read
+    chrono::steady_clock::duration offset = chrono::nanoseconds(0ll);         // UI write, timer read
+    long long timerCount = 0ul;                                               // Timer write, UI read/write
 
-    // 三个状态 , C++ 没有thread.cancel() UI写,计时器读
+    //Three states
     enum class TimerState
     {
         RUNNING,
@@ -134,7 +134,7 @@ int main(int, char **)
         } });
     timerThread.detach();
 
-    // 主循环
+    // main loop
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -143,14 +143,14 @@ int main(int, char **)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Imgui窗口占满Windows窗口
+        // Imgui populates window
         const ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->Pos);
         ImGui::SetNextWindowSize(viewport->Size);
 
-        // UI部分
+        // UI part
         {
-            ImGui::Begin("Ez PPT Timer", NULL,
+            ImGui::Begin("ShowTimer", NULL,
                          ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove |
                              ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
 
@@ -159,28 +159,28 @@ int main(int, char **)
             ImGui::SameLine();
             // printf("Average FPS: %.1f\r", ImGui::GetIO().Framerate);
 
-            // 鼠标悬停在窗口上时
+            // when mouse hovers over window
             if (glfwGetWindowAttrib(window, GLFW_HOVERED))
             {
-                glfwSwapInterval(fpsIntervalFull); // 提高帧率
+                glfwSwapInterval(fpsIntervalFull); // increase frame rate
                 glfwSetWindowSize(window, windowWidthFull, windowHeightFull);
                 clear_color = windowColorFull;
 
                 ImGui::SameLine();
-                if (timerState == TimerState::RUNNING && ImGui::Button("暂停"))
+                if (timerState == TimerState::RUNNING && ImGui::Button("Pause"))
                 {
                     timerState = TimerState::PAUSED;
                     offset += chrono::steady_clock::now() - beginTime;
                     // cout << chrono::duration_cast<chrono::seconds>(offset).count() << endl;
                 }
-                else if (timerState == TimerState::PAUSED && ImGui::Button("恢复"))
+                else if (timerState == TimerState::PAUSED && ImGui::Button("Start"))
                 {
                     beginTime = chrono::steady_clock::now();
                     timerState = TimerState::RUNNING;
                 }
 
                 ImGui::SameLine();
-                if (ImGui::Button("清零"))
+                if (ImGui::Button("Clear"))
                 {
                     timerCount = 0ul;
                     beginTime = chrono::steady_clock::now();
@@ -188,13 +188,13 @@ int main(int, char **)
                 }
 
                 ImGui::SameLine();
-                if (ImGui::Button("关于"))
+                if (ImGui::Button("About"))
                 {
                     system("start https://github.com/Winterreisender/EzSlideTimer");
                 }
 
                 ImGui::SameLine();
-                if (ImGui::Button("退出"))
+                if (ImGui::Button("Exit"))
                 {
                     timerState = TimerState::CANCELED;
                     glfwSetWindowShouldClose(window, true);
@@ -202,15 +202,15 @@ int main(int, char **)
             }
             else
             {
-                clear_color = windowColorCompact; // 半透明
+                clear_color = windowColorCompact; // transparent
                 glfwSetWindowSize(window, windowWidthCompact, windowHeightCompact);
-                glfwSwapInterval(12); // 降低帧率
+                glfwSwapInterval(12); // reduce frame rate
             }
 
             ImGui::End();
         }
 
-        // 渲染
+        // rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
