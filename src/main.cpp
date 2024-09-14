@@ -96,7 +96,7 @@ int main(int, char **)
     // Set default font
     //ImFont *font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\MSYH.ttc", 21.0f, NULL,
                                                // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
-    IM_ASSERT(font != NULL);
+    // IM_ASSERT(font != NULL);
 
     // Set default background color
     ImVec4 clear_color = windowColorCompact; // Fully transparent
